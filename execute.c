@@ -35,3 +35,47 @@ char *find_path(char *command)
 	free(path_dup);
 	return (NULL);
 }
+
+/**
+ * execute - Executes a command in a child process
+ * @args: An array of arguments.
+ *
+ * Return: 0 on success, or an error code.
+ */
+int execute(char **args)
+{
+	pid_t child_pid;
+	char *command;
+	int status;
+
+	command = find_path(args[0]);
+	if (!command)
+	{
+		perror(args[0]);
+		return (127);
+	}
+
+	child_pid = fork();
+	if (child_pid == -1)
+	{
+		perror("Error");
+		free(command);
+		return (1);
+	}
+	if (child_pid == 0)
+	{
+		if (execve(command, args, environ) == -1)
+		{
+			perror(args[0]);
+			free(command);
+			exit(1);
+		}
+	}
+	else
+	{
+		wait(&status);
+	}
+
+	free(command);
+	return (WEXITSTATUS(status));
+}
