@@ -5,8 +5,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-
-/* Function Prototypes */
-void sig_handler(int sig);
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <signal.h>
+#include <errno.h>
 
 #endif /* SHELL_H */
