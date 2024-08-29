@@ -1,59 +1,33 @@
 #include "shell.h"
 
 /**
- * main - Runs a simple UNIX command interpreter (shell)
- * @argc: Number of arguments provided to program
- * @argv: Array of pointers to arguments
- *
- * Return: The exit status of the last command.
+ * main - Entry point for the simple shell
+ * Return: Always 0 (Success)
  */
-
-int main(int argc, char *argv[])
+int main(void)
 {
-	char *input, **args;
-	int status = 0;
+    char *input = NULL;
+    size_t len = 0;
+    ssize_t read;
 
-	(void)argc;
-	(void)argv;
+    while (1)
+    {
+        display_prompt();
+        read = getline(&input, &len, stdin);
 
-	signal(SIGINT, sig_handler);
+        if (read == -1)
+        {
+            free(input);
+            break;
+        }
 
-	while (1)
-	{
-		write(STDOUT_FILENO, "$ ", 2);
-		input = read_input();
-		if (!input)
-			break;
+        if (read > 1)
+        {
+            input[read - 1] = '\0';
+            execute_command(input);
+        }
+    }
 
-		args = tokenize_input(input);
-		if (args[0] == NULL)
-		{
-			free(input);
-			free(args);
-			continue;
-		}
-
-		if (strcmp(args[0], "exit") == 0)
-			handle_exit();
-		else if (strcmp(args[0], "env") == 0)
-			print_env();
-		else
-			status = execute(args);
-
-		free(input);
-		free(args);
-	}
-
-	return (status);
+    return (0);
 }
 
-/**
- * sig_handler - Prints a new prompt upon receiving `SIGINT`.
- * @sig: The signal number.
- */
-
-void sig_handler(int sig)
-{
-	(void)sig;
-	write(STDOUT_FILENO, "\n$ ", 3);
-}
