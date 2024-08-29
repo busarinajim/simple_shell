@@ -11,4 +11,15 @@
 #include <signal.h>
 #include <errno.h>
 
+/* Function Prototypes */
+
+void sig_handler(int sig);
+char *read_input(void);
+char **tokenize_input(char *input);
+int execute(char **args);
+char *find_path(char *command);
+void handle_exit(void);
+void print_env(void);
+
+
 #endif /* SHELL_H */
