@@ -11,6 +11,8 @@
 #include <signal.h>
 #include <errno.h>
 
+extern char **environ;
+
 /* Function Prototypes */
 
 void sig_handler(int sig);
