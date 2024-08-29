@@ -1,33 +1,22 @@
 #include "shell.h"
 
 /**
- * main - Entry point for the simple shell
- * Return: Always 0 (Success)
+ * main - Runs a simple UNIX command interpreter (shell)
+ *
+ * Return: The exit status of the last command.
  */
-int main(void)
+int main(int argc, char *argv[])
 {
-    char *input = NULL;
-    size_t len = 0;
-    ssize_t read;
+	signal(SIGINT, sig_handler);
 
-    while (1)
-    {
-        display_prompt();
-        read = getline(&input, &len, stdin);
-
-        if (read == -1)
+	while (1)
         {
-            free(input);
-            break;
-        }
+                write(STDOUT_FILENO, "$ ", 2);
+                input = read_input();
+                if (!input)
+                        break;
+	}
 
-        if (read > 1)
-        {
-            input[read - 1] = '\0';
-            execute_command(input);
-        }
-    }
-
-    return (0);
-}
-
+	return (status);
+	
+	void sig_handler(int sig);
